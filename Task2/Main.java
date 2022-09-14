@@ -1,26 +1,25 @@
 package natasha.task2;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Main {
     public static void main(String[] args) {
-        int[] numbers = {3, 4, 2, 7};
-        ArrayList<Integer> listNumbers = new ArrayList<>();
-        for (int number : numbers) {
-            listNumbers.add(number);
-        }
+        int[] numbers = {3, 2, 5, 7};
+        int sum = 10;
 
-        for (int i = 0; i < listNumbers.size(); i++) {
-            Integer firstElement = listNumbers.get(i);
-            ArrayList<Integer> list = new ArrayList<>(listNumbers);
-            list.remove(i);
-            for (Integer secondElement : list) {
-                if (firstElement + secondElement == 10) {
-                    ArrayList<Integer> result = new ArrayList<>();
-                    result.add(firstElement);
-                    result.add(secondElement);
-                    System.out.println(result);
-                    return;
+        Arrays.sort(numbers);
+        int first = 0;
+        int last = numbers.length - 1;
+        while (first < last) {
+            int s = numbers[first] + numbers[last];
+            if (s == sum) {
+                System.out.println(numbers[first] + "+" + numbers[last]);
+                return;
+            } else {
+                if (s < sum) {
+                    first++;
+                } else {
+                    last--;
                 }
             }
         }

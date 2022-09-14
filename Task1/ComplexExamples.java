@@ -1,8 +1,10 @@
 package org.example;
 
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.Objects;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class ComplexExamples {
 
@@ -70,42 +72,12 @@ public class ComplexExamples {
         System.out.println("Duplicate filtered, grouped by name, sorted by name and id:");
         System.out.println();
 
-        ArrayList<String> names = new ArrayList<>();
-        for (Person datum : RAW_DATA) {
-            names.add(datum.name);
-        }
-        Collections.sort(names);
-
-        for (int j = 0; j < names.size() - 1; j++) {
-            if (names.get(j).equals(names.get(j + 1))) {
-                names.remove(j + 1);
-                j--;
-            }
-        }
-        if (names.get(0).isEmpty()) {
-            System.out.println("Одно или более имён не указанны");
-        }
-
-        ArrayList<Person> copyRawData = new ArrayList<>();
-        copyRawData.add(RAW_DATA[0]);
-        for (Person rawDatum : RAW_DATA) {
-            if (copyRawData.get(copyRawData.size() - 1).id != rawDatum.id) {
-                copyRawData.add(rawDatum);
-            } else if (copyRawData.get(copyRawData.size() - 1).name != rawDatum.name) {
-                System.out.println("Коллизия. Сортировка не может быть выполнена. Одному id соответствует не единственное имя.");
-                return;
-            }
-        }
-
-        for (String key : names) {
-            int value = 0;
-            for (Person copyRawDatum : copyRawData) {
-                if (key == copyRawDatum.name) {
-                    value++;
-                }
-            }
-            System.out.println("Key: " + key);
-            System.out.println("Value: " + value);
-        }
+        Stream<Person> stream = Arrays.stream(RAW_DATA).sequential();
+        stream.filter(Objects::nonNull)
+                .distinct()
+                .map(p -> p.getName())
+                .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
+                .entrySet()
+                .forEach(x -> System.out.println("Key: " + x.getKey() + "\nValue: " + x.getValue()));
     }
 }
